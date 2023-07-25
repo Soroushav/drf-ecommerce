@@ -28,7 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'apps.user',
 ]
+
+
+AUTH_USER_MODEL = 'user.CustomUser'
 
 # Rest Framework Configurations
 REST_FRAMEWORK = {
