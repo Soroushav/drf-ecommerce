@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Brand, Product
+from apps.product.models import Category, Brand, Product
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,5 +25,5 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if len(data.get('type')) >= 10:
-            raise serializers.ValidationError('type is too long!')
+            raise serializers.ValidationError('Type field is too long!')
         
