@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'mptt',
+    'drf_spectacular',
 
 
     'apps.user',
@@ -43,10 +44,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+# Spectacular Settings 
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'DRF Ecommerce API',
+    'DESCRIPTION': 'My DRF Ecommerce practice project!',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
