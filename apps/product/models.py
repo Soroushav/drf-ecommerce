@@ -28,7 +28,7 @@ class Product(UUIDFY, TimeStample, models.Model):
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=150)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    catageory = TreeForeignKey("category", on_delete=models.CASCADE, null=True, blank=True)
+    category = TreeForeignKey("category", on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return self.name
