@@ -58,10 +58,10 @@ class BrandViewSet(viewsets.ViewSet):
         return Response(serializer.data)
     
     def create(self, request):
-        serializer = BrandSerializer(data=self.queryset)
+        serializer = BrandSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response('Created')
+            return Response('Created', status=201)
         return Response(serializer.errors)
     
     def retrieve(self, request, name):
@@ -92,7 +92,7 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data)
     
     def create(self, request):
-        serializer = ProductSerializer(data=self.queryset)
+        serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response('Created')

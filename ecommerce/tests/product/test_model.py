@@ -4,7 +4,7 @@ pytestmark = pytest.mark.django_db
 
 class TestCategoryModel():
     def test_str_method(self, category_factory):
-        obj = category_factory()
+        obj = category_factory(name='test_category')
         assert obj.__str__() == 'test_category'
 
 class TestBrandModel():
@@ -14,5 +14,5 @@ class TestBrandModel():
 
 class TestProductModel():
     def test_str_method(self, product_factory):
-        obj = product_factory()
+        obj = product_factory(name='test_product')
         assert obj.__str__() == 'test_product'

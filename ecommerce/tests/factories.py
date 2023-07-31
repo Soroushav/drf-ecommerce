@@ -6,20 +6,20 @@ class CategoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Category
 
-    name = "test_category"
+    name = factory.Sequence(lambda n: "Cat_%d" % n)
 
 class BrandFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Brand
 
-    name = 'test_brand'
+    name = factory.Sequence(lambda n: "Brand_%d" % n)
 
 class ProductFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Product
 
-    name = 'test_product'
-    description = 'test_description'
-    type = 'test_type'
+    name = factory.Sequence(lambda n: "Product_%d" % n)
+    description = factory.Sequence(lambda n: "Description_%d" % n)
+    type = factory.Sequence(lambda n: "Type_%d" % n)
     brand = factory.SubFactory(BrandFactory)
     category = factory.SubFactory(CategoryFactory)
