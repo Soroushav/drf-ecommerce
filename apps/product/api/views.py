@@ -1,117 +1,65 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.decorators import action
+
 from drf_spectacular.utils import extend_schema
 
-from .serializers import CategorySerializer, BrandSerializer, ProductSerializer
-from apps.product.models import Category, Brand, Product
+from .serializers import CategorySerializer, BrandSerializer, ProductSerializer, ProductLineSerializer, ProductImageSerializer
+from apps.product.models import Category, Brand, Product, ProductLine, ProductImage
+
+class SearchMixin:
+
+    @action(detail=False, methods=['GET'])
+    def search(self, request):
+        queryset = self.queryset
+        serializer_class = self.serializer_class
+        keyword = request.query_params.get('keyword', None)
+
+        if keyword :
+            queryset = queryset.filter(name__icontains=keyword)
+            serializer = serializer_class(instance=queryset, many=True)
+            return Response(serializer.data)
+        
+        serializer = serializer_class(instance=queryset, many=True)
+        return Response(serializer.data)
 
 
-# class CategoryViewSet(viewsets.ViewSet):
-#     queryset = Category.objects.all()
-#     lookup_field = 'name'
-
-#     @extend_schema(responses=CategorySerializer)
-#     def list(self, request):
-#         serializer = CategorySerializer(instance=self.queryset, many=True)
-#         return Response(serializer.data)
-
-#     def create(self, request):
-#         serializer = CategorySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response("Created")
-#         return Response(serializer.errors)
-    
-#     def retrieve(self, request, name):
-#         instance = Category.objects.get(name=name)
-#         serializer = CategorySerializer(instance=instance)
-#         return Response(serializer.data)
-    
-#     def update(self, request, name):
-#         instance = Category.objects.get(name=name)
-#         serializer = CategorySerializer(instance=instance, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response('Updated')
-#         return Response(serializer.errors)    
-    
-#     def destroy(self, request, pk):
-#         instance = Category.objects.get(name=name)
-#         instance.delete()
-#         return Response("Deleted")
-class CategoryViewSet(viewsets.ModelViewSet):
+@extend_schema(responses=CategorySerializer)
+class CategoryViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Category.objects.all()
     lookup_field = 'name'
     serializer_class = CategorySerializer
 
-    def list(self, request, *args, **kwargs):
-        serializer = CategorySerializer(instance=self.queryset, many=True)
-        return Response(serializer.data)
-
-class BrandViewSet(viewsets.ViewSet):
+@extend_schema(responses=BrandSerializer)    
+class BrandViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Brand.objects.all()
     lookup_field = 'name'
+    serializer_class = BrandSerializer
 
-    @extend_schema(responses=BrandSerializer) 
-    def list(self, request):
-        serializer = BrandSerializer(instance=self.queryset, many=True)
-        return Response(serializer.data)
-    
-    def create(self, request):
-        serializer = BrandSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response('Created', status=201)
-        return Response(serializer.errors)
-    
-    def retrieve(self, request, name):
-        instance = Brand.objects.get(name=name)
-        serializer = BrandSerializer(instance=instance)
-        return Response(serializer.data)
-    
-    def update(self, request, pk):
-        instance = Brand.objects.get(pk=pk)
-        serializer = BrandSerializer(instance=instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response('Updated')
-        return Response(serializer.errors)
-    
-    def destroy(self, request, pk):
-        instance = Brand.objects.get(pk=pk)
-        instance.delete()
-        return Response("Deleted")
-    
-
-class ProductViewSet(viewsets.ViewSet):
+@extend_schema(responses=ProductSerializer)    
+class ProductViewSet(viewsets.ModelViewSet, SearchMixin):
     queryset = Product.objects.all()
+    lookup_field = 'name'
+    serializer_class = ProductSerializer
 
-    @extend_schema(responses=ProductSerializer)    
-    def list(self, request):
-        serializer = ProductSerializer(instance=self.queryset, many=True)
-        return Response(serializer.data)
+
+@extend_schema(responses=ProductLineSerializer)  
+class ProductLineViewSet(viewsets.ModelViewSet, SearchMixin):
+    queryset = ProductLine.objects.all()
+    serializer_class = ProductLineSerializer
+    lookup_field = 'product__name'
     
-    def create(self, request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response('Created')
-        return Response(serializer.errors)
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'message': 'Created'})
     
-    def update(self, request, pk):
-        instance = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(instance=instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response('Updated')
-        return Response(serializer.errors)
     
-    def retrieve(self, request, pk):
-        instance = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(instance=instance)
-        return Response(serializer.data)
+@extend_schema(responses=ProductImageSerializer)    
+class ProductImageViewSet(viewsets.ModelViewSet, SearchMixin):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    lookup_field = 'name'
     
-    def destroy(self, request, pk):
-        instance = Product.objects.get(pk=pk)
-        instance.delete()
-        return Response("Deleted")
+    def create(self, request, *args, **kwargs):
+        super().create(request, *args, **kwargs)
+        return Response({'message': 'Created'})

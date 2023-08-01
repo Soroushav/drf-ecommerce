@@ -31,6 +31,4 @@ class TestBrandApi:
             'name': 'brandzz',
         }
         response = api_client().post(self.endpoint, data=content)
-        print('gon')
-        print(response.content)
         assert response.status_code == 201
