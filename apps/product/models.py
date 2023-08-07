@@ -8,7 +8,7 @@ import uuid
 
 
 class Category(UUIDFY, TimeStample, MPTTModel):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     parent = TreeForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     class MPTTMeta:
@@ -18,14 +18,14 @@ class Category(UUIDFY, TimeStample, MPTTModel):
         return self.name
 
 class Brand(UUIDFY, TimeStample, models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     category = models.ManyToManyField(Category)
     def __str__(self):
         return self.name
     
 
 class Product(UUIDFY, TimeStample, models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     description = models.TextField(null=True, blank=True)
     is_digital = models.BooleanField(default=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
